@@ -15,7 +15,6 @@
           Quasar App
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
@@ -62,31 +61,36 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import axios from 'axios'
 
 export default {
   name: 'MainLayout',
   data() {
     return {
+      dialog: false,
       leftDrawerOpen: false,
-      dialog: false
     }
   },
   mounted: function () {
-      window.setInterval(() => {
+    window.setInterval(() => {
       this.getNotifications()
-    }, 30000)
+    }, 5000)
   },
   methods: {
-    ...mapActions([
-        'CHECK_VERSION'
-    ]),
+   
     async getNotifications(){
-      let response = await this.CHECK_VERSION();
-      //Status check for updates. If status verified true then update.
-      if(response.status.verified == true){ 
-        this.dialog = !this.dialog;
-      }
+      await axios.get('https://dog.ceo/api/breeds/image/random')
+      .then(function (response) {
+        //Status check for updates. If status verified true then update.
+        if(response.data){ 
+          this.dialog = !this.dialog;
+        }
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
     },
     async refresh(){
       await this.$router.go();
