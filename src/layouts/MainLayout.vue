@@ -15,6 +15,7 @@
           Quasar App
         </q-toolbar-title>
 
+        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
@@ -61,46 +62,47 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'MainLayout',
   data() {
     return {
-      dialog: false,
       leftDrawerOpen: false,
+      dialog: false,
+      polling: null
     }
   },
-  mounted: function () {
-    window.setInterval(() => {
-      this.getNotifications()
-    }, 5000)
+  beforeDestroy () {
+    clearInterval(this.polling);
+  },
+  created () {
+    this.pollData();
   },
   methods: {
-   
+    ...mapActions([
+        'CHECK_VERSION'
+    ]),
+    pollData () {
+      this.polling = setInterval(async () => {
+        await this.getNotifications()
+      }, 25000)
+    },
     async getNotifications(){
-      await axios.get('https://dog.ceo/api/breeds/image/random')
-      .then(function (response) {
-        //Status check for updates. If status verified true then update.
-        if(response.data){ 
-          this.dialog = !this.dialog;
-        }
+      let data = '0.0.0.';
+      if(sessionStorage.getItem('version')){
+        data = JSON.parse( sessionStorage.getItem('version') );
+      }
+      let response = await this.CHECK_VERSION(data);
 
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
+      //Status check for updates. If updateRequired == true then ask for update
+      if(response.updateRequired == true){ 
+        this.dialog = !this.dialog;
+      }
     },
     async refresh(){
       await this.$router.go();
     }
   },
-
 }
 </script>
-
-
-
-
- 
