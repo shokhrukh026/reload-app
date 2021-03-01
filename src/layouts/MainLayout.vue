@@ -51,7 +51,7 @@
             </q-card-section>
 
             <q-card-actions align="right" class="bg-white text-teal">
-              <q-btn flat label="No" v-close-popup />
+              <q-btn flat label="No" v-close-popup @click="totallyNotUpdate = true"/>
               <q-btn flat label="Yes" v-close-popup @click="refresh"/>
             </q-card-actions>
           </q-card>
@@ -70,7 +70,8 @@ export default {
     return {
       leftDrawerOpen: false,
       dialog: false,
-      polling: null
+      polling: null,
+      totallyNotUpdate: false,
     }
   },
   beforeDestroy () {
@@ -86,18 +87,19 @@ export default {
     pollData () {
       this.polling = setInterval(async () => {
         await this.getNotifications()
-      }, 25000)
+      }, 5000)
     },
     async getNotifications(){
-      let data = '0.0.0.';
-      if(sessionStorage.getItem('version')){
-        data = JSON.parse( sessionStorage.getItem('version') );
+      let data = {version: '0.0.0.'};
+      if(sessionStorage.getItem('versionData')){
+        data = JSON.parse( sessionStorage.getItem('versionData') );
       }
-      let response = await this.CHECK_VERSION(data);
 
-      //Status check for updates. If updateRequired == true then ask for update
-      if(response.updateRequired == true){ 
-        this.dialog = !this.dialog;
+      if(!this.totallyNotUpdate){
+        let response = await this.CHECK_VERSION(data);
+        if(response.updateRequired == true){ 
+          this.dialog = !this.dialog;
+        }
       }
     },
     async refresh(){

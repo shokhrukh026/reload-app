@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'https://cat-fact.herokuapp.com/facts/random?animal_type=cat';
+const baseUrl = 'https://cat-fact.herokuapp.com/facts/random?animal_type=cat'; // change url to your backend api's url for checking updates
 
 export default{
     state:{
@@ -15,13 +15,12 @@ export default{
             method: "GET",
             url: baseUrl,
             // headers: {Authorization: getters.getUser.token},
-            data: {
-                version: payload,
-            }
+            data: payload,
           })
           .then(async (e) => {
-              e.data = {latestVersion: '0.1.1.', updateRequired: true};
-              sessionStorage.setItem('version', JSON.stringify(e.data));
+            //   Below one line code used for testing purposes.
+              e.data = {version: '0.1.1.', updateRequired: true};
+              sessionStorage.setItem('versionData', JSON.stringify(e.data));
               return e.data;
           })
           .catch((error) => {
