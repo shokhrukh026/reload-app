@@ -87,7 +87,7 @@ export default {
     pollData () {
       this.polling = setInterval(async () => {
         await this.getNotifications()
-      }, 5000)
+      }, 25000)
     },
     async getNotifications(){
       let data = process.env.VERSION;
