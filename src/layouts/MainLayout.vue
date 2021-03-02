@@ -90,7 +90,7 @@ export default {
       }, 5000)
     },
     async getNotifications(){
-      let data = {version: '0.0.0.'};
+      let data = process.env.VERSION;
       if(sessionStorage.getItem('versionData')){
         data = JSON.parse( sessionStorage.getItem('versionData') );
       }

@@ -18,8 +18,8 @@ export default{
             data: payload,
           })
           .then(async (e) => {
-            //   Below one line code used for testing purposes.
-              e.data = {version: '0.1.1.', updateRequired: true};
+            //   Below one line code used for testing purposes. If you want to test then uncomment it.
+              // e.data = {version: '1.1.1.', updateRequired: true};
               sessionStorage.setItem('versionData', JSON.stringify(e.data));
               return e.data;
           })
